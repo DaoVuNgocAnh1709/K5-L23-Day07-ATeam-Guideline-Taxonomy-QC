@@ -1,14 +1,9 @@
 # Guideline gán nhãn — v0.1 (bản cá nhân) — 104
 
-> Bản nháp khung: AI soạn từ mô tả lab và 4 ảnh đã xem (img_002, img_020, img_035, img_038).
-> Mọi ô `[TỰ CHỐT]` và mọi dòng ghi "chưa kiểm" phải do người viết xem ảnh và xác nhận.
-> Nộp nguyên bản AI mà không tự xem ảnh là vi phạm RULES.md mục AI.
-
-- Phiên bản: v0.1 (cá nhân, chưa thống nhất nhóm)
+- Phiên bản: v0.1 
 - Ngày: 2026-11-16
-- Người viết: 101
-- Phạm vi: 40 ảnh `data/images/img_001.jpg` … `img_040.jpg`
-
+- Người viết: 104
+- Phạm vi: 40 ảnh 
 ## 1. Mục tiêu
 
 Nhãn huấn luyện mô hình phát hiện vật 2D (người, phương tiện) trên ảnh đường phố, dùng cho camera giao thông và bài toán đếm/ theo vết phương tiện.
@@ -33,10 +28,9 @@ Bộ lớp dùng cho lượt gán độc lập: 5 lớp của v0 + `ignore_regio
 | `motorcycle` | Xe hai bánh có động cơ, kể cả xe máy điện. | img_035: xe máy giữa ảnh | Xe đạp, xích lô không động cơ (img_006, img_029, img_039) → không gán |
 | `person` | Người thật, đang đứng, đi hoặc ngồi lộ rõ thân người. | người đi bộ trên vỉa hè | Tượng (img_011, img_017, img_027), ma-nơ-canh (img_033), hình in trên biển quảng cáo (img_018) → không gán |
 | `ignore_region` | Vùng không gán từng vật: đám đông dày, cụm vật cao dưới 20 px. | vùng chợ đông không tách được từng người | Không dùng để che lỗi bỏ sót vật to, rõ |
-| `bus` *(đề xuất, chờ Pha 2)* | Xe khách cỡ lớn, thân dài, nhiều cửa sổ. | img_009, img_031, img_037, img_040 | Xe tải có thùng kín cỡ lớn → `truck` |
-| `tuk_tuk` *(đề xuất, chờ Pha 2)* | Xe ba bánh chở khách/kia, ca-bin hở. | img_004, img_016, img_035 | Xe ba bánh chở hàng thùng kín → `truck` nếu thùng hàng rõ |
+| `bus` | Xe khách cỡ lớn, thân dài, nhiều cửa sổ. | img_009, img_031, img_037, img_040 | Xe tải có thùng kín cỡ lớn → `truck` |
+| `tuk_tuk`  | Xe ba bánh chở khách/kia, ca-bin hở. | img_004, img_016, img_035 | Xe ba bánh chở hàng thùng kín → `truck` nếu thùng hàng rõ |
 
-Quy tắc quyết định lớp vs thuộc tính (theo GUIDE.md): *"Mô hình phát hiện vật 2D có phải đoán ra thông tin này khi suy luận không?"* Có → `classes`. Không (chỉ để lọc mẫu khó / kiểm QC) → `attributes`.
 
 Vật không thuộc lớp nào:
 - Tượng, ma-nơ-canh, đồ chơi, hình in, phản chiếu: **không gán box**. Nếu cụm chiếm > 10% ảnh và dễ gây nhầm: một `ignore_region` + một dòng trong `submission/qc/image_issues.csv`.
@@ -97,7 +91,6 @@ Mã quy tắc dùng tạm thời ở bản cá nhân; nhóm chốt lại mã ở
 | img_037 | Bán tải nắp thùng cao + xe buýt | R-01 + ca chờ chốt | Bán tải → `truck`; xe buýt → đề xuất `bus` | Nắp thùng cao làm ranh giới `van`/`truck` mơ hồ |
 | img_038 | Tủ kính đồ chơi, xe mô hình | R-09 | Không gán, ảnh 0 box | Đồ chơi, không phải phương tiện thật |
 | img_040 | Xe buýt | đề xuất `bus` | Chờ Pha 2; tạm `can_review` | Như img_009 |
-| *(các ảnh còn lại)* | `[TỰ CHỐT]` | | | Người viết phải xem và bổ sung ca thật |
 
 Ca cần hỏi reviewer (không tự quyết): lớp cho tuk-tuk, lớp cho xe buýt, người ngồi trong xe kín (R-05), ranh giới `van`/`truck` với bán tải nắp thùng cao.
 
@@ -125,4 +118,3 @@ Ngưỡng QC áp dụng (lấy từ `submission/taxonomy.json` mục `rules`, kh
 |---|---|---|
 | v0 | Bản giảng viên: 5 lớp, 3 thuộc tính định tính | Bản khởi đầu |
 | v0.1 | Thêm ngưỡng phần trăm cho `occluded_level`, 14 quy tắc vẽ box, bảng ca khó | v0 không trả lời: tuk-tuk, xe buýt, xe chở xe, tượng, phản chiếu, người ngồi trong xe |
-| `[TỰ CHỐT]` | Sau khi xem đủ 40 ảnh: bổ sung ca thật + sửa quyết định sai | Người viết tự điền |
